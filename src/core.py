@@ -3,31 +3,6 @@ import tkinter as tk
 from tkinter import filedialog
 
 
-# browser popup functions
-def file_browse(multiple=False, filetypes=["*.png", "*.jpg"]):
-    # # filetypes.append(("All Files", "*"))
-    # file = eg.fileopenbox(
-    #     msg="select an image file",
-    #     default="*.png",
-    #     filetypes=filetypes,
-    #     multiple=False,
-    # )
-
-    # return file
-
-    filetypes.append(("All Files", "*"))
-    root = tk.Tk()
-    root.withdraw()
-    root.iconbitmap(AssetManager.file_icon)
-
-    if multiple:
-        path = filedialog.askopenfilenames(filetypes=filetypes)
-    else:
-        path = filedialog.askopenfilename(filetypes=filetypes)
-    root.destroy()
-    return path if path != "" else None
-
-
 class AssetManager:
     """
     Stores paths to asset files as attributes.
@@ -59,5 +34,21 @@ class AssetManager:
     # this is just a  test file, delete me later
     data_file = os.path.join(assets_folder, "data.csv")
 
-    if __name__ == "__main__":
-        print(file_browse())
+
+# browser popup functions
+def file_browse(multiple=False, filetypes=[("Image File", ("*.png", "*.jpg"))]):
+    filetypes.append(("All Files", "*"))
+    root = tk.Tk()
+    root.withdraw()
+    root.iconbitmap(AssetManager.file_icon)
+
+    if multiple:
+        path = filedialog.askopenfilenames(filetypes=filetypes)
+    else:
+        path = filedialog.askopenfilename(filetypes=filetypes)
+    root.destroy()
+    return path if path != "" else None
+
+
+if __name__ == "__main__":
+    print(file_browse())
