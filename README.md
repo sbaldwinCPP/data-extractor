@@ -1,16 +1,37 @@
 # Data-Extractor
 Tool for extracting xy data from an image. Handy for grabbing data from old science papers.
 
-# Install
-Install python, version 3.11 was used and should be recorded in this [file](.python-version)
+## Install with UV
+Install uv with the standalone installer, run this command in any terminal window:
+```
+# On Windows.
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Now, open a terminal at the root of this project, and run this command to create a virtual environment and install dependencies.
+```
+uv sync
+```
 
 
+And that should be all good to go! try running the program directly with
+```
+uv run ./src/main.py
+```
+
+Export setting to requirements file:
+```
+uv pip compile pyproject.toml > requirements.txt
+```
+
+## Install with PIP
+Install the python version recorded in this [file](.python-version).
 It is strongly recommended to create a new virtual environment for each new project.
 
 
 Run the commend below in a terminal at the root of this project.
 ```
-py -3.11 -m venv .venv
+py -3.12 -m venv .venv
 ```
 
 Activate the new environment:
@@ -21,15 +42,4 @@ Activate the new environment:
 Install packages from requirements file:
 ```
 pip install -r requirements.txt
-```
-**Note:** this is limited to the packages directly used in this project. Dependencies for libraries will be resolved by pip. The requirements.txt file needs to be maintained by hand, pip does not keep track of which binaries are actually imported to the project, and which are just dependencies.
-
-To install all binaries recorded in the freeze.txt file:
-```
-pip install -r freeze.txt
-```
-
-Record all binaries:
-```
-pip freeze > freeze.txt
 ```
