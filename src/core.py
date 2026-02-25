@@ -1,6 +1,11 @@
+# standard library
 import os
 import tkinter as tk
 from tkinter import filedialog
+
+# 3rd party
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 
 class AssetManager:
@@ -35,7 +40,7 @@ class AssetManager:
     data_file = os.path.join(assets_folder, "data.csv")
 
 
-# browser popup functions
+# %% simple tkinter popup functions
 def file_browse(multiple=False, filetypes=[("Image File", ("*.png", "*.jpg"))]):
     filetypes.append(("All Files", "*"))
     root = tk.Tk()
@@ -50,5 +55,57 @@ def file_browse(multiple=False, filetypes=[("Image File", ("*.png", "*.jpg"))]):
     return path if path != "" else None
 
 
+# get coordinates
+def get_image_coords(image_path):
+    image = plt.imread(image_path)
+    title = "Left-Click on the image to add a point\nRight-Click to undo the last point\nMiddle-Click to finish"
+    # disable plot toolbar - not sure if this is needed
+    # with mpl.rc_context({"toolbar": "None"}):
+    plt.imshow(image)
+    plt.title(title)
+    plt.tight_layout()
+    coordinates = plt.ginput(n=-1, timeout=0)
+    plt.close()
+    return coordinates
+
+
+def calc_distance(xy0, xy1):
+    x0, y0 = xy0
+    x1, y1 = xy1
+    dx = x1 - x0
+    dy = y0 - y1
+    return (dx**2 + dy**2) ** 0.5
+
+
+def calibrate_scale(image_path):
+    image = plt.imread(image_path)
+    title = "Left-Click on 2 points in the image\nRight-Click to undo the last point"
+
+    # disable plot toolbar
+    with mpl.rc_context({"toolbar": "None"}):
+        plt.imshow(image)
+    plt.title(title)
+    plt.tight_layout()
+    coordinates = plt.ginput(n=2, timeout=0)
+    plt.close()
+
+    pixel_distance = calc_distance(coordinates[0], coordinates[1])
+
+    # make this a better input later
+    full_scale_distance = float(input("Enter Full Scale Distance: "))
+    pixels_per_unit = pixel_distance / full_scale_distance
+
+    return pixels_per_unit
+
+
 if __name__ == "__main__":
-    print(file_browse())
+    image_path = file_browse()
+
+    # coordinates = get_image_coords(image_path)
+    # # print output
+    # [
+    #     print(f"Point {index}: ({value[0]:.2f}, {value[1]:.2f})")
+    #     for index, value in enumerate(coordinates)
+    # ]
+
+    distance = print("Pixels Per Unit: ", calibrate_scale(image_path))
